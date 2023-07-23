@@ -23,6 +23,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JwtAuthenticationFilter jwtFilter;
 	
+	@Autowired
+	private JwtAuthenticationEntryPoint entryPoint;
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
@@ -35,7 +38,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/token").permitAll()
 				.anyRequest().authenticated()
 				.and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and()
+				.exceptionHandling().authenticationEntryPoint(entryPoint);
 		
 		http.addFilterBefore(jwtFilter,UsernamePasswordAuthenticationFilter.class);
 		
